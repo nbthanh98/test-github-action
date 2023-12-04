@@ -18,30 +18,15 @@ jobs:
     
                 docker push ghcr.io/${{ secrets.GH_USERNAME }}/test-github-action:latest
 
-#            - # login to Docker Hub using the secrets provided
-#                name: Login to Docker Hub
-#                uses: docker/login-action@v2
-#                with:
-#                  username: ${{ secrets.DOCKERHUB_USERNAME }}
-#                  password: ${{ secrets.DOCKERHUB_TOKEN }}
-#            - # create a buildkit builder instance
-#                name: Set up Docker Buildx
-#                uses: docker/setup-buildx-action@v2
-#            - # build the container image and push it to Docker Hub
-#                name: Build and push
-#                uses: docker/build-push-action@v4
-#                with:
-#                  context: .
-#                  file: ./Dockerfile
-#                  push: true
-#                  tags: ${{ secrets.DOCKERHUB_USERNAME }}/test-github-action
-#            - # Login to the server
-#                name: Restart K3S deployment
-#                uses: appleboy/ssh-action@master
-#                with:
-#                  host: ${{ secrets.SSH_HOST }}
-#                  username: ${{ secrets.SSH_USERNAME }}
-#                  port: ${{ secrets.SSH_PORT }}
-#                  key: ${{ secrets.SSH_KEY }}
-#                  # rollout your deployment
-#                  script: kubectl rollout restart deployment java-deployment
+            - name: Restart K3S deployment
+              uses: appleboy/ssh-action@master
+              with:
+                host: ${{ secrets.SSH_HOST }}
+                username: ${{ secrets.SSH_USERNAME }}
+                port: ${{ secrets.SSH_PORT }}
+                key: ${{ secrets.SSH_KEY }}
+                # rollout your deployment
+                script: |
+                  kubectl create secret docker-registry secret --docker-server=https://ghcr.io --docker-username=${{ secrets.GH_USERNAME }} --docker-password=${{ secrets.GH_PAT }}
+                  cd k8s
+                  helm upgrade --install test-github-action -f test-github-action/values.yaml ./test-github-action
