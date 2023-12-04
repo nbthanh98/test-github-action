@@ -5,9 +5,9 @@ on: # trigger the automated ci/cd
         branches:
             - "master"
 
-defaults:
-  run:
-    working-directory: ./app
+#defaults:
+#  run:
+#    working-directory: ./app
 
 jobs:
     build:
@@ -32,6 +32,5 @@ jobs:
                 # rollout your deployment
                 script: |
                   kubectl create secret docker-registry secret --docker-server=https://ghcr.io --docker-username=${{ secrets.GH_USERNAME }} --docker-password=${{ secrets.GH_PAT }}
-                  ls -a
-#                  cd k8s
-#                  helm upgrade --install test-github-action -f test-github-action/values.yaml ./test-github-action
+                  cd ~/helm-charts/test-github-action/k8s
+                  helm upgrade --install test-github-action -f test-github-action/values.yaml ./test-github-action
