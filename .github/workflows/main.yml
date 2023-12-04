@@ -19,9 +19,9 @@ jobs:
             - name: Build and push docker image
               run: |
                 docker login ghcr.io -u ${{ secrets.GH_USERNAME }} -p ${{ secrets.GH_PAT }}
-                docker build -t ghcr.io/${{ secrets.GH_USERNAME }}/test-github-action:latest .
+                docker build -t ghcr.io/${{ secrets.GH_USERNAME }}/test-github-action:prod .
     
-                docker push ghcr.io/${{ secrets.GH_USERNAME }}/test-github-action:latest
+                docker push ghcr.io/${{ secrets.GH_USERNAME }}/test-github-action:prod
             - name: Restart K3S deployment
               uses: appleboy/ssh-action@master
               with:
