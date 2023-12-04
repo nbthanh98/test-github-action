@@ -1,4 +1,4 @@
-name: Next.js
+name: Java
 
 on: # trigger the automated ci/cd
     push:
