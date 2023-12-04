@@ -28,5 +28,6 @@ jobs:
                 # rollout your deployment
                 script: |
                   kubectl create secret docker-registry secret --docker-server=https://ghcr.io --docker-username=${{ secrets.GH_USERNAME }} --docker-password=${{ secrets.GH_PAT }}
-                  cd k8s
-                  helm upgrade --install test-github-action -f test-github-action/values.yaml ./test-github-action
+                  ls -a
+#                  cd k8s
+#                  helm upgrade --install test-github-action -f test-github-action/values.yaml ./test-github-action
