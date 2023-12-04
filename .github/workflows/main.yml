@@ -33,4 +33,4 @@ jobs:
                 script: |
                   kubectl create secret docker-registry secret --docker-server=https://ghcr.io --docker-username=${{ secrets.GH_USERNAME }} --docker-password=${{ secrets.GH_PAT }}
                   cd ~/helm-charts/test-github-action/k8s
-                  helm upgrade --install test-github-action -f test-github-action/values.yaml ./test-github-action
+                  helm upgrade --install --recreate-pods test-github-action -f test-github-action/values.yaml ./test-github-action
