@@ -1,4 +1,4 @@
-name: Next.js
+name: Java
 
 on: # trigger the automated ci/cd
     push:
@@ -38,4 +38,4 @@ jobs:
                   port: ${{ secrets.SSH_PORT }}
                   key: ${{ secrets.SSH_KEY }}
                   # rollout your deployment
-                  script: kubectl rollout restart deployment java-deployment
+                  script: helm version
