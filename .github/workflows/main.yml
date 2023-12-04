@@ -4,6 +4,11 @@ on: # trigger the automated ci/cd
     push:
         branches:
             - "master"
+
+defaults:
+  run:
+    working-directory: ./app
+
 jobs:
     build:
         name: Build Docker image
@@ -17,27 +22,16 @@ jobs:
                 docker build -t ghcr.io/${{ secrets.GH_USERNAME }}/test-github-action:latest .
     
                 docker push ghcr.io/${{ secrets.GH_USERNAME }}/test-github-action:latest
-
-            - name: 'Deploy'
-              uses: 'deliverybot/helm@master'
+            - name: Restart K3S deployment
+              uses: appleboy/ssh-action@master
               with:
-                token: '${{ secrets.GH_PAT }}'
-                chart: 'k8s/test-github-action'
-                namespace: default
-                release: test-github-action
-                value-files: './k8s/test-github-action/values.yaml'
-              env:
-                KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
-#            - name: Restart K3S deployment
-#              uses: appleboy/ssh-action@master
-#              with:
-#                host: ${{ secrets.SSH_HOST }}
-#                username: ${{ secrets.SSH_USERNAME }}
-#                port: ${{ secrets.SSH_PORT }}
-#                key: ${{ secrets.SSH_KEY }}
-#                # rollout your deployment
-#                script: |
-#                  kubectl create secret docker-registry secret --docker-server=https://ghcr.io --docker-username=${{ secrets.GH_USERNAME }} --docker-password=${{ secrets.GH_PAT }}
-#                  ls -a
-##                  cd k8s
-##                  helm upgrade --install test-github-action -f test-github-action/values.yaml ./test-github-action
+                host: ${{ secrets.SSH_HOST }}
+                username: ${{ secrets.SSH_USERNAME }}
+                port: ${{ secrets.SSH_PORT }}
+                key: ${{ secrets.SSH_KEY }}
+                # rollout your deployment
+                script: |
+                  kubectl create secret docker-registry secret --docker-server=https://ghcr.io --docker-username=${{ secrets.GH_USERNAME }} --docker-password=${{ secrets.GH_PAT }}
+                  ls -a
+#                  cd k8s
+#                  helm upgrade --install test-github-action -f test-github-action/values.yaml ./test-github-action
